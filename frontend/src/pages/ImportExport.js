@@ -29,10 +29,11 @@ const ImportExport = ({ rifaId }) => {
     <div style={{ marginTop: '20px' }}>
       <h3>Importar / Exportar Compradores</h3>
       <input type="file" ref={fileInput} accept=".csv" />
-      <button onClick={importarCSV}>Importar CSV</button>
-      <button onClick={exportarCSV}>Exportar CSV</button>
-      <a href="/modelo_compradores.csv" download>
-        📥 Baixar modelo CSV
+      <button onClick={importarCSV}>📥 Importar CSV</button>
+      <button onClick={exportarCSV}>📤 Exportar CSV</button>
+      <br />
+      <a href="/modelo_compradores.csv" download style={{ marginTop: '10px', display: 'inline-block' }}>
+        📄 Baixar modelo CSV
       </a>
     </div>
   );

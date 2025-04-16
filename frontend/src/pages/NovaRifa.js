@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
-import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 import { estilosGlobais } from '../estilos';
-
 
 function NovaRifa() {
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [totalNumeros, setTotalNumeros] = useState('');
+  const [total_numeros, setTotalNumeros] = useState('');
+  const [erro, setErro] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post('/rifas', {
-        nome,
-        descricao,
-        total_numeros: parseInt(totalNumeros)
-      });
-      navigate('/');
-    } catch (err) {
-      alert('Erro ao criar rifa');
-    }
+  const salvar = () => {
+    api.post('/rifas', { nome, descricao, total_numeros })
+      .then(() => navigate('/'))
+      .catch(() => setErro('Erro ao criar rifa.'));
   };
 
   return (
     <div style={estilosGlobais.container}>
       <h2 style={estilosGlobais.titulo}>Nova Rifa</h2>
-      <form onSubmit={handleSubmit}>
-        <input style={estilosGlobais.input} value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome" required /><br />
-        <textarea style={estilosGlobais.textarea} value={descricao} onChange={e => setDescricao(e.target.value)} placeholder="Descrição" /><br />
-        <input style={estilosGlobais.input} type="number" value={totalNumeros} onChange={e => setTotalNumeros(e.target.value)} placeholder="Total de Números" required /><br />
-        <button style={estilosGlobais.button} type="submit">Salvar</button>
-      </form>
+      <input placeholder="Nome" value={nome} onChange={e => setNome(e.target.value)} />
+      <input placeholder="Descrição" value={descricao} onChange={e => setDescricao(e.target.value)} />
+      <input placeholder="Total de Números" type="number" value={total_numeros} onChange={e => setTotalNumeros(e.target.value)} />
+      <button onClick={salvar} style={estilosGlobais.button}>Salvar</button>
+      {erro && <p style={estilosGlobais.errorText}>{erro}</p>}
     </div>
   );
 }
