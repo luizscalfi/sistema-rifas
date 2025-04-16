@@ -1,11 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import RifaList from './RifaList';
-import NovaRifa from './NovaRifa';
-import EditarRifa from './EditarRifa';
-import RifaDetalhes from './RifaDetalhes';
-import EditarComprador from './EditarComprador';
-import Sorteio from './Sorteio';
+import RifaList from './pages/RifaList';
+import NovaRifa from './pages/NovaRifa';
+import EditarRifa from './pages/EditarRifa';
+import RifaDetalhes from './pages/RifaDetalhes';
+import EditarComprador from './pages/EditarComprador';
+import Sorteio from './pages/Sorteio';
 import { estilosGlobais } from './estilos';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
-
+  
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark');
@@ -63,7 +64,6 @@ function App() {
         <Route path="/rifas/:id" element={<RifaDetalhes />} />
         <Route path="/compradores/:id/editar" element={<EditarComprador />} />
         <Route path="/rifas/:id/sorteio" element={<Sorteio />} />
-        <Route path="*" element={<p>❌ Página não encontrada</p>} />
       </Routes>
     </div>
   );
