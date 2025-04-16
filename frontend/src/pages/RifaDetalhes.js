@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ImportExport from './ImportExport';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { estilosGlobais } from '../estilos';
@@ -125,6 +126,8 @@ function RifaDetalhes() {
           ))}
         </ul>
       </div>
+
+      <ImportExport rifaId={id} />
 
       <h4>Adicionar Comprador</h4>
       <form onSubmit={adicionarComprador}>

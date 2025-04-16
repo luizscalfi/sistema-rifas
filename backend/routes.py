@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
+from flask import make_response
 from models import Rifa, Comprador
 from database import db
 import random
+
 
 bp = Blueprint('api', __name__)
 
@@ -144,3 +146,39 @@ def sortear_rifa(rifa_id):
         'numero_sorteado': numero_sorteado,
         'ganhador': ganhador
     })
+
+@bp.route('/rifas/<int:rifa_id>/exportar_compradores', methods=['GET'])
+def exportar_compradores(rifa_id):
+    rifa = Rifa.query.get_or_404(rifa_id)
+    compradores = rifa.compradores
+
+    csv_data = "id,nome,contato,numeros\n"
+    for c in compradores:
+        csv_data += f"{c.id},{c.nome},{c.contato},\"{c.numeros}\"\n"
+
+    response = make_response(csv_data)
+    response.headers['Content-Disposition'] = f'attachment; filename=compradores_rifa_{rifa_id}.csv'
+    response.headers["Content-Type"] = "text/csv"
+    return response
+
+
+@bp.route('/rifas/<int:rifa_id>/importar_compradores', methods=['POST'])
+def importar_compradores(rifa_id):
+    if 'arquivo' not in request.files:
+        return jsonify({'erro': 'Arquivo não encontrado'}), 400
+
+    file = request.files['arquivo']
+    stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+    reader = csv.DictReader(stream)
+
+    for row in reader:
+        novo = Comprador(
+            nome=row['nome'],
+            contato=row['contato'],
+            numeros=row['numeros'],
+            rifa_id=rifa_id
+        )
+        db.session.add(novo)
+
+    db.session.commit()
+    return jsonify({'mensagem': 'Importação concluída com sucesso'})
