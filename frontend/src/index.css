@@ -1,0 +1,15 @@
+
+/* Fonte global */
+body, html {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8;
+  color: #000;
+}
+
+/* Ativa fundo escuro quando o modo dark estiver ativo */
+body.dark, html.dark {
+  background-color: #121212;
+  color: #eee;
+}

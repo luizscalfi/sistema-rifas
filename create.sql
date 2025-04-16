@@ -1,0 +1,18 @@
+CREATE DATABASE IF NOT EXISTS rifas_db;
+USE rifas_db;
+
+CREATE TABLE rifa (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  descricao VARCHAR(255),
+  total_numeros INT
+);
+
+CREATE TABLE comprador (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  contato VARCHAR(120),
+  numeros VARCHAR(255),
+  rifa_id INT,
+  FOREIGN KEY (rifa_id) REFERENCES rifa(id) ON DELETE CASCADE
+);
