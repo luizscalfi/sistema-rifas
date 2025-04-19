@@ -98,6 +98,10 @@ function RifaDetalhes() {
     }
   };
 
+  const irParaEditarComprador = (compradorId) => {
+    navigate(`/compradores/${compradorId}/editar`);
+  };
+
   return (
     <div style={estilosGlobais.container}>
       <h2 style={estilosGlobais.titulo}>{rifa?.nome}</h2>
@@ -180,7 +184,11 @@ function RifaDetalhes() {
           </thead>
           <tbody>
             {compradoresFiltrados.map((c) => (
-              <tr key={c.id}>
+              <tr
+                key={c.id}
+                onClick={() => irParaEditarComprador(c.id)}
+                style={{ cursor: 'pointer' }}
+              >
                 <td>{c.nome}</td>
                 <td>{c.contato}</td>
                 <td>{c.numeros.join(', ')}</td>
@@ -215,7 +223,8 @@ function RifaDetalhes() {
       </div>
 
       <div style={{ marginTop: '30px' }}>
-        <Link to={`/rifas/${id}/sorteio`}
+        <Link
+          to={`/rifas/${id}/sorteio`}
           style={{
             ...estilosGlobais.button,
             backgroundColor: '#D90404',
