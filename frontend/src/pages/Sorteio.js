@@ -91,7 +91,7 @@ function Sorteio() {
 
       {resultado && mostrarResultado && (
         <div style={{ marginTop: '30px' }}>
-          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>🎉 Resultado Real 🎉</h3>
+          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>🎉 Resultado do sorteio! 🎉</h3>
           <p style={{ fontSize: '22px', fontWeight: 'bold' }}>
             <strong>Número sorteado:</strong> {resultado.numero_sorteado}
           </p>
