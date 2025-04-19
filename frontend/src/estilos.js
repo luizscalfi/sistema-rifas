@@ -29,6 +29,19 @@ export const estilosGlobais = {
       cursor: 'pointer',
       marginTop: '10px'
     },
+    buttonSort: {
+      backgroundColor: '#D90404',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      padding: '20px 52px',
+      cursor: 'pointer',
+      marginTop: '10px',
+      fontSize: '25px',
+      textAlign: 'center',
+      display: 'block',
+      margin: '8px auto'
+    },    
     listItem: {
       padding: '10px',
       borderBottom: '1px solid #eee',

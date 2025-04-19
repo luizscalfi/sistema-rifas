@@ -8,75 +8,96 @@ function Sorteio() {
   const { id } = useParams();
   const [rifa, setRifa] = useState(null);
   const [resultado, setResultado] = useState(null);
+  const [mostrarResultado, setMostrarResultado] = useState(false);
   const [erro, setErro] = useState('');
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
-  const [data, setData] = useState([]);
+  const [exibirRoleta, setExibirRoleta] = useState(true);
+
+  const fakeData = new Array(10).fill({ option: '' });
 
   useEffect(() => {
     api.get(`/rifas/${id}`)
       .then(res => {
         setRifa(res.data);
-
-        const numeros = res.data.numeros.map((num, idx) => ({
-          option: num.toString()
-        }));
-        setData(numeros);
       })
-      .catch(() => setErro('Erro ao carregar rifa'));
+      .catch((err) => {
+        console.error('Erro ao carregar rifa:', err);
+        setErro('Erro ao carregar rifa');
+      });
   }, [id]);
 
   const sortear = async () => {
     setErro('');
     setResultado(null);
+    setMostrarResultado(false);
+    setExibirRoleta(true);
 
     try {
       const res = await api.post(`/rifas/${id}/sortear`);
-      const numeroSorteado = res.data.numero_sorteado;
 
-      const index = data.findIndex(d => d.option === numeroSorteado.toString());
+      const posicaoAleatoria = Math.floor(Math.random() * fakeData.length);
+      setPrizeNumber(posicaoAleatoria);
+      setMustSpin(true);
 
-      if (index >= 0) {
-        setPrizeNumber(index);
-        setMustSpin(true);
-        setResultado(res.data);
-      } else {
-        setErro('Número sorteado não encontrado na lista.');
-      }
-
+      setResultado(res.data);
     } catch (err) {
       setErro('Erro no sorteio. Verifique se há compradores.');
     }
   };
 
+  const handleStopSpinning = () => {
+    setMustSpin(false);
+    setExibirRoleta(false);
+    setMostrarResultado(true);
+  };
+
   return (
-    <div style={estilosGlobais.container}>
+    <div style={{
+      ...estilosGlobais.container,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center'
+    }}>
       <h2 style={estilosGlobais.titulo}>Sorteio</h2>
 
       {rifa && <p><strong>{rifa.nome}</strong>: {rifa.descricao}</p>}
 
-      {data.length > 0 && (
-        <div style={{ margin: '40px 0' }}>
+      {exibirRoleta && (
+        <div style={{ margin: '0px 0', transform: 'scale(0.8)', transformOrigin: 'center' }}>
           <Wheel
             mustStartSpinning={mustSpin}
             prizeNumber={prizeNumber}
-            data={data}
-            backgroundColors={['#3e3e3e', '#df3428']}
+            data={fakeData}
+            backgroundColors={['#1FA667', '#8C2703']}
             textColors={['#ffffff']}
-            onStopSpinning={() => setMustSpin(false)}
+            outerBorderColor="#591202"
+            outerBorderWidth={3}
+            radiusLineColor="#D90404"
+            radiusLineWidth={2}
+            fontSize={18}
+            onStopSpinning={handleStopSpinning}
           />
         </div>
       )}
 
-      <button style={estilosGlobais.button} onClick={sortear}>🎲 Girar Roleta</button>
+      {!mustSpin && !mostrarResultado && (
+        <button style={estilosGlobais.buttonSort} onClick={sortear}> 🎲 Sortear</button>
+      )}
 
       {erro && <p style={estilosGlobais.errorText}>{erro}</p>}
 
-      {resultado && (
-        <div style={estilosGlobais.container}>
-          <h3>Resultado</h3>
-          <p><strong>Número sorteado:</strong> {resultado.numero_sorteado}</p>
-          <p><strong>Ganhador:</strong> {resultado.ganhador.nome} ({resultado.ganhador.contato})</p>
+      {resultado && mostrarResultado && (
+        <div style={{ marginTop: '30px' }}>
+          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>🎉 Resultado Real 🎉</h3>
+          <p style={{ fontSize: '22px', fontWeight: 'bold' }}>
+            <strong>Número sorteado:</strong> {resultado.numero_sorteado}
+          </p>
+          <p style={{ fontSize: '22px', fontWeight: 'bold' }}>
+            <strong>Ganhador:</strong> {resultado.ganhador.nome}
+          </p>
         </div>
       )}
     </div>
